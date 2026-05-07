@@ -58,4 +58,4 @@ Fivetran MCP (community/демо) — мост к Fivetran API: управлен
 ### Тестируйте: Запустите агента с Gemini, вызовите tools; мониторьте traces в Arize
 ### ( https://github.com/elastic/mcp-server-elasticsearch )
 
-Тестируйте: Запустите агента с Gemini, вызовите tools; мониторьте traces в Arize
+PROFIT !!!
