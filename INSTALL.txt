@@ -120,7 +120,7 @@ bash
 sudo apt update && sudo apt full-upgrade -y
 
 # Установка зависимостей для Cursor
-sudo apt install -y wget gpg curl libgtk-3-0 libx11-xcb1 libnss3 libasound2 libgbm1 libxss1 libgconf-2-4 xvfb
+sudo apt install -y wget gpg curl libgtk-3-0 libx11-xcb1 libnss3 libgbm1 libxss1 xvfb
 
 # Добавление репозитория Microsoft (для VS Code/Cursor)
 curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /usr/share/keyrings/microsoft.gpg > /dev/null
@@ -130,72 +130,13 @@ sudo apt update
 ## 5. Установите Cursor в WSL
 ## 5.1 Скачайте и установите Cursor
 bash
-# Установка через официальный скрипт (рекомендуется)
+# Установка agent через официальный скрипт (не рекомендуется)
 curl https://cursor.com/install -fsS | sh
 
-# Или ручная установка .deb
-wget https://www.cursor.com/download/stable/linux-x64 -O cursor.appimage
-chmod +x cursor.appimage
-./cursor.appimage --version  # проверка
-Важно: Cursor в Linux — это AppImage или .deb пакет, работает полностью автономно.
+# Или установка .deb (рекомендуется)
+https://dev.to/forhad_hosain_d27ef1edf40/how-to-install-the-cursor-the-ai-code-editor-on-ubuntu-2404-a-simple-guide-3dn1
 
-## 5.2 Создайте удобный запуск
-bash
-sudo tee /usr/local/bin/cursor <<EOF
-#!/bin/bash
-xvfb-run --auto-servernum cursor.appimage "\$@"
-EOF
-sudo chmod +x /usr/local/bin/cursor
-## 6. Настройка GUI для Cursor в WSL
-## 6.1 Установите WSLg (Windows 11) или VcXsrv (Windows 10)
-Windows 11 (рекомендуется) — WSLg включено автоматически:
-
-bash
-# Просто запустите
-cursor --version
-Windows 10 — установите VcXsrv:
-
-Скачайте VcXsrv с официального сайта. https://sourceforge.net/projects/vcxsrv/
-
-Запустите XLaunch → Multiple windows → Display 0 → Start no client.
-
-В Ubuntu: export DISPLAY=:0
-
-## 6.2 Создайте Desktop-файл
-bash
-mkdir -p ~/.local/share/applications
-cat > ~/.local/share/applications/cursor.desktop <<EOF
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=Cursor
-Comment=AI Code Editor
-Exec=cursor %F
-Icon=code
-Categories=Development;
-EOF
-## 7. Запуск и проверка
-## 7.1 Первый запуск
-bash
-cursor --no-sandbox --disable-gpu-sandbox
-Cursor откроется в отдельном окне с полноценным GUI.
-
-## 7.2 Создайте терминал-алиас
-Добавьте в ~/.bashrc:
-
-bash
-alias cursor='cursor --no-sandbox'
-source ~/.bashrc
-## 8. Интеграция с Windows
-## 8.1 Доступ к файлам Windows
-text
-/mnt/c/Users/ВашПользователь/Desktop  # Windows Desktop
-/mnt/c/Users/ВашПользователь/Documents # Windows Documents
-## 8.2 Открытие проектов
-bash
-cd ~/projects/myproject
-cursor .  # откроет текущую папку в Cursor
-## 9. Дополнительная оптимизация
+## 6. Дополнительная оптимизация
 bash
 # Увеличьте память WSL (создайте .wslconfig в Windows)
 # C:\Users\ВашПользователь\.wslconfig:
