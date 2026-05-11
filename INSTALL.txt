@@ -112,89 +112,102 @@ sudo apt update
 sudo apt full-upgrade -y
 ```
 
-## 4. Проверьте, что WSL работает
-
-В PowerShell выполните:
-
-```powershell
-wsl -l -v
-```
-
-Вы должны увидеть установленную Ubuntu со значением `VERSION` равным `2`.
-
-Также можно открыть Ubuntu и выполнить:
-
-```bash
-uname -a
-```
-
-## 5. Установите Cursor в Windows
-
-Cursor ставится как обычное приложение для Windows. На странице загрузок Cursor есть отдельная установка для desktop-версии и инструментов, а для Linux доступна загрузка через `cursor.com/install`. [web:12]
-
-### 5.1 Скачайте Cursor
-
-Откройте официальный сайт Cursor и скачайте версию для Windows. [web:12]
-
-### 5.2 Установите Cursor
-
-Запустите установщик и завершите установку стандартным способом.
-
-### 5.3 Откройте Cursor
-
-После установки запустите Cursor из меню Пуск.
-
-## 6. Настройте Cursor для работы с WSL
-
-Для работы с проектами в WSL Cursor использует встроенную поддержку Remote - WSL. Это позволяет открывать папки из Linux прямо из Windows-приложения.
-
-## 6.1 Установите расширение Remote - WSL
-Откройте Cursor.
-
-Перейдите в раздел Extensions (Ctrl+Shift+X).
-
-Найдите Remote - WSL от Microsoft.
-
-Нажмите Install.
-
-## 6.2 Установите VS Code Server в WSL
-В Cursor нажмите Ctrl+Shift+P → введите Remote-WSL: New WSL Window.
-
-Cursor автоматически установит VS Code Server в вашу Ubuntu. Это может занять несколько минут при первом запуске.
-
-## 6.3 Создайте проект в WSL
-В Ubuntu создайте папку для проекта:
+## 4. Настройте Ubuntu для Cursor
+В Ubuntu терминале:
 
 bash
-mkdir ~/myproject
-cd ~/myproject
-В Cursor нажмите File → Open Folder.
+# Обновление системы
+sudo apt update && sudo apt full-upgrade -y
 
-В проводнике найдите \\wsl$\Ubuntu-24.04\home\<ваш_пользователь>\myproject.
+# Установка зависимостей для Cursor
+sudo apt install -y wget gpg curl libgtk-3-0 libx11-xcb1 libnss3 libasound2 libgbm1 libxss1 libgconf-2-4 xvfb
 
-Откройте эту папку.
+# Добавление репозитория Microsoft (для VS Code/Cursor)
+curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /usr/share/keyrings/microsoft.gpg > /dev/null
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
 
-В левом нижнем углу Cursor появится индикатор WSL: Ubuntu-24.04.
+sudo apt update
+## 5. Установите Cursor в WSL
+## 5.1 Скачайте и установите Cursor
+bash
+# Установка через официальный скрипт (рекомендуется)
+curl -fsSL https://cli.cursor.sh/ | sh
 
-## 6.4 Установите полезные расширения в WSL
-В WSL-окне Cursor установите расширения для разработки:
+# Или ручная установка .deb
+wget https://downloader.cursor.sh/linux/appImage/x64 -O cursor.appimage
+chmod +x cursor.appimage
+./cursor.appimage --version  # проверка
+Важно: Cursor в Linux — это AppImage или .deb пакет, работает полностью автономно.
+
+## 5.2 Создайте удобный запуск
+bash
+sudo tee /usr/local/bin/cursor <<EOF
+#!/bin/bash
+xvfb-run --auto-servernum cursor.appimage "\$@"
+EOF
+sudo chmod +x /usr/local/bin/cursor
+## 6. Настройка GUI для Cursor в WSL
+## 6.1 Установите WSLg (Windows 11) или VcXsrv (Windows 10)
+Windows 11 (рекомендуется) — WSLg включено автоматически:
 
 bash
-# Git, Python, Docker и другие популярные
-code --install-extension ms-vscode-remote.remote-wsl
-code --install-extension ms-python.python
-code --install-extension ms-vscode-remote.remote-ssh
-## 7. Дополнительная настройка (опционально)
-## 7.1 Ускорьте работу WSL
-В Ubuntu выполните:
+# Просто запустите
+cursor --version
+Windows 10 — установите VcXsrv:
+
+Скачайте VcXsrv с официального сайта.
+
+Запустите XLaunch → Multiple windows → Display 0 → Start no client.
+
+В Ubuntu: export DISPLAY=:0
+
+## 6.2 Создайте Desktop-файл
+bash
+mkdir -p ~/.local/share/applications
+cat > ~/.local/share/applications/cursor.desktop <<EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Cursor
+Comment=AI Code Editor
+Exec=cursor %F
+Icon=code
+Categories=Development;
+EOF
+## 7. Запуск и проверка
+## 7.1 Первый запуск
+bash
+cursor --no-sandbox --disable-gpu-sandbox
+Cursor откроется в отдельном окне с полноценным GUI.
+
+## 7.2 Создайте терминал-алиас
+Добавьте в ~/.bashrc:
 
 bash
-sudo apt install zstd -y
-echo 'export WSLENV=WT_SESSION:WT_PROFILE_ID' >> ~/.bashrc
-## 7.2 Настройте доступ к Windows-файлам
-Файлы Windows доступны в /mnt/c/. Для производительности работайте с файлами внутри WSL (~/projects).
+alias cursor='cursor --no-sandbox'
+source ~/.bashrc
+## 8. Интеграция с Windows
+## 8.1 Доступ к файлам Windows
+text
+/mnt/c/Users/ВашПользователь/Desktop  # Windows Desktop
+/mnt/c/Users/ВашПользователь/Documents # Windows Documents
+## 8.2 Открытие проектов
+bash
+cd ~/projects/myproject
+cursor .  # откроет текущую папку в Cursor
+## 9. Дополнительная оптимизация
+bash
+# Увеличьте память WSL (создайте .wslconfig в Windows)
+# C:\Users\ВашПользователь\.wslconfig:
+# [wsl2]
+# memory=8GB
+# processors=4
 
-## 7.3 Проверьте интеграцию
-Создайте тестовый файл test.py в WSL-проекте и убедитесь, что автодополнение, терминал и отладка работают корректно.
-
+# В Ubuntu — шрифты и темы
+sudo apt install -y fonts-firacode fira-code-fonts
+Быстрый запуск после настройки
+wsl -d Ubuntu-24.04
 ## Готово!
+cursor . — Cursor откроется с GUI!
+
+Преимущества: полная Linux-среда, нет зависимости от Windows-приложений, все обновления через Linux.
