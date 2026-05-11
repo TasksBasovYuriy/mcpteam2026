@@ -146,4 +146,55 @@ Cursor ставится как обычное приложение для Window
 
 ## 6. Настройте Cursor для работы с WSL
 
-Для работы с проектами в WSL Cursor 
+Для работы с проектами в WSL Cursor использует встроенную поддержку Remote - WSL. Это позволяет открывать папки из Linux прямо из Windows-приложения.
+
+## 6.1 Установите расширение Remote - WSL
+Откройте Cursor.
+
+Перейдите в раздел Extensions (Ctrl+Shift+X).
+
+Найдите Remote - WSL от Microsoft.
+
+Нажмите Install.
+
+## 6.2 Установите VS Code Server в WSL
+В Cursor нажмите Ctrl+Shift+P → введите Remote-WSL: New WSL Window.
+
+Cursor автоматически установит VS Code Server в вашу Ubuntu. Это может занять несколько минут при первом запуске.
+
+## 6.3 Создайте проект в WSL
+В Ubuntu создайте папку для проекта:
+
+bash
+mkdir ~/myproject
+cd ~/myproject
+В Cursor нажмите File → Open Folder.
+
+В проводнике найдите \\wsl$\Ubuntu-24.04\home\<ваш_пользователь>\myproject.
+
+Откройте эту папку.
+
+В левом нижнем углу Cursor появится индикатор WSL: Ubuntu-24.04.
+
+## 6.4 Установите полезные расширения в WSL
+В WSL-окне Cursor установите расширения для разработки:
+
+bash
+# Git, Python, Docker и другие популярные
+code --install-extension ms-vscode-remote.remote-wsl
+code --install-extension ms-python.python
+code --install-extension ms-vscode-remote.remote-ssh
+## 7. Дополнительная настройка (опционально)
+## 7.1 Ускорьте работу WSL
+В Ubuntu выполните:
+
+bash
+sudo apt install zstd -y
+echo 'export WSLENV=WT_SESSION:WT_PROFILE_ID' >> ~/.bashrc
+## 7.2 Настройте доступ к Windows-файлам
+Файлы Windows доступны в /mnt/c/. Для производительности работайте с файлами внутри WSL (~/projects).
+
+## 7.3 Проверьте интеграцию
+Создайте тестовый файл test.py в WSL-проекте и убедитесь, что автодополнение, терминал и отладка работают корректно.
+
+## Готово!
