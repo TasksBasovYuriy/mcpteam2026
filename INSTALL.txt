@@ -1,0 +1,149 @@
+# Переустановка WSL2 с Ubuntu и установка Cursor на Windows
+
+Это пошаговая инструкция с нуля: удалить старую WSL-конфигурацию, поставить WSL2 заново, установить Ubuntu и настроить Cursor для работы с проектами внутри WSL.
+
+## Что понадобится
+
+- Windows 10 или Windows 11 с установленными последними обновлениями. [page:2]
+- Права администратора в Windows. [page:2]
+- Подключение к интернету.
+- Свободное место на диске.
+
+## 1. Удалите старую WSL и Ubuntu
+
+Если вы хотите начать совсем с нуля, сначала удалите старый дистрибутив Ubuntu и отключите WSL-компоненты.
+
+### 1.1 Удалите дистрибутив Ubuntu
+
+Откройте PowerShell или Windows Terminal от имени администратора и выполните:
+
+```powershell
+wsl -l -v
+```
+
+Посмотрите точное имя дистрибутива, например `Ubuntu` или `Ubuntu-24.04`, затем удалите его:
+
+```powershell
+wsl --unregister Ubuntu
+```
+
+Если у вас другое имя, подставьте его вместо `Ubuntu`.
+
+### 1.2 Отключите компоненты WSL
+
+В том же PowerShell от имени администратора выполните:
+
+```powershell
+dism.exe /online /disable-feature /featurename:VirtualMachinePlatform /norestart
+dism.exe /online /disable-feature /featurename:Microsoft-Windows-Subsystem-Linux /norestart
+```
+
+После этого перезагрузите компьютер.
+
+## 2. Установите WSL2 заново
+
+Самый простой способ — поставить WSL через встроенную команду. Официальная документация Ubuntu рекомендует запускать `wsl --install` из PowerShell от имени администратора. [page:2]
+
+### 2.1 Включите WSL
+
+После перезагрузки откройте PowerShell от имени администратора и выполните:
+
+```powershell
+wsl --install
+```
+
+Эта команда включает нужные компоненты и ставит Linux-дистрибутив по умолчанию. [page:2]
+
+Если команда не сработала, можно включить компоненты вручную:
+
+```powershell
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+```
+
+Затем перезагрузите ПК.
+
+### 2.2 Убедитесь, что используется WSL2
+
+После установки выполните:
+
+```powershell
+wsl --set-default-version 2
+```
+
+Проверьте состояние:
+
+```powershell
+wsl -l -v
+```
+
+## 3. Установите Ubuntu
+
+Ubuntu можно поставить через Microsoft Store или через команду `wsl --install -d <Distro>`. В документации Ubuntu отдельно упоминается `Ubuntu-24.04` как рекомендуемый LTS-вариант. [page:2]
+
+### Вариант A: через командную строку
+
+Посмотрите доступные дистрибутивы:
+
+```powershell
+wsl --list --online
+```
+
+Затем установите Ubuntu 24.04:
+
+```powershell
+wsl --install -d Ubuntu-24.04
+```
+
+### Вариант B: через Microsoft Store
+
+Откройте Microsoft Store, найдите `Ubuntu`, нажмите `Get` и дождитесь установки. После этого запустите Ubuntu из меню Пуск. [page:2]
+
+### 3.1 Первичный запуск Ubuntu
+
+При первом запуске Ubuntu попросит создать пользователя и пароль. Это учетные данные Linux, они могут отличаться от Windows. [page:2]
+
+### 3.2 Обновите пакеты
+
+После входа в Ubuntu выполните:
+
+```bash
+sudo apt update
+sudo apt full-upgrade -y
+```
+
+## 4. Проверьте, что WSL работает
+
+В PowerShell выполните:
+
+```powershell
+wsl -l -v
+```
+
+Вы должны увидеть установленную Ubuntu со значением `VERSION` равным `2`.
+
+Также можно открыть Ubuntu и выполнить:
+
+```bash
+uname -a
+```
+
+## 5. Установите Cursor в Windows
+
+Cursor ставится как обычное приложение для Windows. На странице загрузок Cursor есть отдельная установка для desktop-версии и инструментов, а для Linux доступна загрузка через `cursor.com/install`. [web:12]
+
+### 5.1 Скачайте Cursor
+
+Откройте официальный сайт Cursor и скачайте версию для Windows. [web:12]
+
+### 5.2 Установите Cursor
+
+Запустите установщик и завершите установку стандартным способом.
+
+### 5.3 Откройте Cursor
+
+После установки запустите Cursor из меню Пуск.
+
+## 6. Настройте Cursor для работы с WSL
+
+Для работы с проектами в WSL Cursor 
