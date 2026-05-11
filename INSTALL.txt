@@ -131,10 +131,10 @@ sudo apt update
 ## 5.1 Скачайте и установите Cursor
 bash
 # Установка через официальный скрипт (рекомендуется)
-curl -fsSL https://cli.cursor.sh/ | sh
+curl https://cursor.com/install -fsS | sh
 
 # Или ручная установка .deb
-wget https://downloader.cursor.sh/linux/appImage/x64 -O cursor.appimage
+wget https://www.cursor.com/download/stable/linux-x64 -O cursor.appimage
 chmod +x cursor.appimage
 ./cursor.appimage --version  # проверка
 Важно: Cursor в Linux — это AppImage или .deb пакет, работает полностью автономно.
