@@ -1,3 +1,12 @@
+https://habr.com/ru/companies/haulmont/articles/866388/comments/
+
+
+https://github.com/Raku/intellij-ide-fork
+
+
+https://github.com/zed-industries/zed
+
+
 # MCP Сервисы для Cloud + Gemini
 Model Context Protocol (MCP) — это открытый стандарт для унифицированного взаимодействия LLM-агентов (например, Gemini в cloud) с внешними сервисами через специализированные серверы. Основные принципы: сервер MCP экспонирует tools (функции с схемами JSON), resources (данные для контекста) и prompts (шаблоны); клиент (агент) обнаруживает их динамически, вызывает stdio/HTTP/SSE; поддержка stateful сессий, auth, streaming. Это позволяет Gemini "говорить" с сервисами без custom adapters, идеально для cloud (GCP, Elastic Cloud).
 
