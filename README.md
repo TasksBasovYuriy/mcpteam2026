@@ -1,4 +1,4 @@
-https://habr.com/ru/companies/haulmont/articles/866388/comments/
+https://habr.com/ru/companies/haulmont/articles/866388/
 
 
 https://github.com/Raku/intellij-ide-fork
